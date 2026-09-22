@@ -4,6 +4,7 @@
   <main>
     <RouterView />
     1111
+    222222
   </main>
 </template>
 
