@@ -3,6 +3,7 @@
   <!-- 현재 주소에 맞는 컴포넌트가 여기에 그려집니다 -->
   <main>
     <RouterView />
+    1111
   </main>
 </template>
 
