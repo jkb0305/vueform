@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../components/HomeView.vue'
 import AboutView from '../components/AboutView.vue'
 import filelist from '../guide/mockup.vue'
@@ -30,7 +30,7 @@ const routes = [
 
 const router = createRouter({
   // 브라우저의 History API를 사용하여 깨끗한 URL(/#/ 없는 주소)을 만듭니다.
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 
