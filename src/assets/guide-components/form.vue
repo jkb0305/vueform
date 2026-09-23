@@ -22,7 +22,11 @@
         />
         <span class="form-line"></span>
         <button class="cancel-btn" v-if="modelValue" @click="clearInput" type="button"></button>
-        <button v-if="date" class="date-picker-btn" type="button"></button>
+            <button
+      v-if="date"
+      class="date-picker-btn"
+      type="button"
+    ></button>
     </div>
     <label :for="id">
       {{ label }}

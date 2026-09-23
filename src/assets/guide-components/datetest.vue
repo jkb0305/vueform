@@ -1,22 +1,31 @@
 <template>
-  <div>
-    <VueDatePicker
-      v-model="date"
-      format="yyyy-MM-dd"
-    />
 
-    <p>
-      선택한 날짜:
-      {{ date }}
-    </p>
+  <div>
+
+    <h1>날짜 테스트</h1>
+
+    <VueDatePicker
+  v-model="date"
+
+  locale="ko-KR"
+
+  format="yyyy-MM-dd"
+
+  :enable-time-picker="false"
+
+  :clearable="false"
+
+  :auto-apply="true"
+  :teleport="true"
+/>
+
   </div>
+
 </template>
 
+
 <script setup>
-import { ref } from 'vue'
 
-import VueDatePicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
+import FormDate from './formdate.vue'
 
-const date = ref(null)
 </script>

@@ -192,6 +192,14 @@ body.datepicker-open {
 
 }
 
+:global(.dp--btn-base)
+{
+  display:none;
+}
+:global(.dp--arrow-top)
+{
+  display:none;
+}
 
 .dp__calendar {
 
