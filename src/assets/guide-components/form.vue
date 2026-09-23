@@ -21,7 +21,8 @@
         @blur="isFocused = false"
         />
         <span class="form-line"></span>
-        <button class="cancel-btn" type="button"></button>
+        <button class="cancel-btn" v-if="modelValue" @click="clearInput" type="button"></button>
+        <button v-if="date" class="date-picker-btn" type="button"></button>
     </div>
     <label :for="id">
       {{ label }}
@@ -39,8 +40,12 @@
 
 <script setup>
 import { ref } from 'vue'
-
+//defineprops 는 부모에게서 받기 
 defineProps({
+  date:{
+    type:Boolean,
+    default:false,
+  },
   id: {
     type: String,
     required: true
@@ -86,7 +91,7 @@ defineProps({
     default: ''
   }
 })
-
+//부모에게 보내기 
 const emit = defineEmits([
   'update:modelValue'
 ])
@@ -99,17 +104,13 @@ const onInput = (event) => {
     event.target.value
   )
 }
+const clearInput = () => { 
+  emit( 'update:modelValue', '' ) 
+}
 </script>
 
 
 <style scoped lang="scss">
-.form-field,
-.form-field *,
-.form-field *::before,
-.form-field *::after {
-  box-sizing: border-box;
-}
-
 .form-field {
   position: relative;
   width: 100%;
@@ -122,12 +123,27 @@ const onInput = (event) => {
         position:relative;
         width:100%;
         max-width: 100%;
+        display:flex;
         .cancel-btn{
             position:absolute;
             right:0;
             top:50%;
             transform:translateY(-50%);
             background-image:url(../styles/images/ico_cancel.png);
+            background-repeat: no-repeat;
+            background-size:24px auto;
+            width:24px;
+            height:24px;
+            padding: 0;
+            border: 0;
+            cursor: pointer;
+        }
+        .date-picker-btn{
+          position:absolute;
+            right:0;
+            top:50%;
+            transform:translateY(-50%);
+            background-image:url(../styles/images/ico_calendar.png);
             background-repeat: no-repeat;
             background-size:24px auto;
             width:24px;
@@ -203,20 +219,14 @@ const onInput = (event) => {
 
     .form-line {
     position: absolute;
-
     left: 50%;
     bottom: 0;
-
     width: 0;
     height: 1px;
-
     background-color: #111;
-
     transform: translateX(-50%);
-
     transition:
         width 0.3s ease;
-
     }
 
 
@@ -313,5 +323,10 @@ const onInput = (event) => {
 
   color: #e53935;
 }
-
+.dp--menu-wrapper{
+    transform:translate(-50%,-50%) !important;
+    left:50% !important;
+    top:50% !important;
+    width:100% !important;
+}
 </style>
