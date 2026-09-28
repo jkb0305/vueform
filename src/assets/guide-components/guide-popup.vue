@@ -49,7 +49,7 @@
         필요한 내용을 여기에 넣으면 됩니다.
       </p>
       <div class="btn-wrap">
-        <button style="width:100%" type="button">111</button>
+        <button style="width:100%" type="button">112</button>
       </div>
 
     </AppBottomSheet>
