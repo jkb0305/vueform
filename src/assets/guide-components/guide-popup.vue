@@ -38,7 +38,7 @@
     <!-- Bottom Sheet -->
     <AppBottomSheet
       v-model="bottomOpen"
-      title="Bottom Sheet"
+      title="바텀 팝업입니다."
     >
 
       <p>
@@ -48,6 +48,9 @@
       <p>
         필요한 내용을 여기에 넣으면 됩니다.
       </p>
+      <div class="btn-wrap">
+        <button style="width:100%" type="button">111</button>
+      </div>
 
     </AppBottomSheet>
 

@@ -57,214 +57,65 @@
 </template>
 
 
-<script>
-export default {
+<script setup>
 
-  name: 'AppFullScreen',
+import { toRef } from 'vue'
 
-  props: {
+import { usePopup } from '@/assets/js/popup'
 
-    modelValue: {
-      type: Boolean,
-      default: false
-    },
 
-    title: {
-      type: String,
-      default: 'Full Screen'
-    },
+const props = defineProps({
 
-    description: {
-      type: String,
-      default: '내용입니다.'
-    }
-
+  modelValue: {
+    type: Boolean,
+    default: false
   },
 
-
-  emits: [
-    'update:modelValue'
-  ],
-
-
-  data() {
-
-    return {
-
-      lastFocusedElement: null
-
-    }
-
+  title: {
+    type: String,
+    default: ''
   },
 
-
-  watch: {
-
-    modelValue(value) {
-
-      if (value) {
-
-        this.openFullScreen()
-
-      } else {
-
-        this.removeEvents()
-
-      }
-
-    }
-
+  description: {
+    type: String,
+    default: ''
   },
 
-
-  methods: {
-
-    openFullScreen() {
-
-      this.lastFocusedElement =
-        document.activeElement
-
-      document.body.classList.add(
-        'popup-open'
-      )
-
-
-      this.$nextTick(() => {
-
-        this.$refs.fullscreen?.focus()
-
-        document.addEventListener(
-          'keydown',
-          this.handleKeydown
-        )
-
-      })
-
-    },
-
-
-    close() {
-
-      this.$emit(
-        'update:modelValue',
-        false
-      )
-
-    },
-
-
-    removeEvents() {
-
-      document.body.classList.remove(
-        'popup-open'
-      )
-
-      document.removeEventListener(
-        'keydown',
-        this.handleKeydown
-      )
-
-
-      this.$nextTick(() => {
-
-        if (
-          this.lastFocusedElement &&
-          document.body.contains(
-            this.lastFocusedElement
-          )
-        ) {
-
-          this.lastFocusedElement.focus()
-
-        }
-
-      })
-
-    },
-
-
-    handleKeydown(event) {
-
-      if (event.key === 'Escape') {
-
-        event.preventDefault()
-
-        this.close()
-
-        return
-
-      }
-
-
-      if (event.key !== 'Tab') {
-        return
-      }
-
-
-      const fullscreen =
-        this.$refs.fullscreen
-
-      if (!fullscreen) {
-        return
-      }
-
-
-      const focusableElements =
-        fullscreen.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        )
-
-
-      if (!focusableElements.length) {
-        return
-      }
-
-
-      const firstElement =
-        focusableElements[0]
-
-      const lastElement =
-        focusableElements[
-          focusableElements.length - 1
-        ]
-
-
-      if (
-        event.shiftKey &&
-        document.activeElement === firstElement
-      ) {
-
-        event.preventDefault()
-
-        lastElement.focus()
-
-      }
-
-      else if (
-        !event.shiftKey &&
-        document.activeElement === lastElement
-      ) {
-
-        event.preventDefault()
-
-        firstElement.focus()
-
-      }
-
-    }
-
-  },
-
-
-  beforeUnmount() {
-
-    this.removeEvents()
-
+  showButton: {
+    type: Boolean,
+    default: false
   }
 
-}
-</script>
+})
 
+
+const emit = defineEmits([
+  'update:modelValue'
+])
+
+
+// props.modelValue를 ref로 변환
+const modelValue =
+  toRef(props, 'modelValue')
+
+
+// 공통 팝업 기능 사용
+const {
+  popupElement
+} = usePopup(modelValue)
+
+
+// 닫기
+const close = () => {
+
+  emit(
+    'update:modelValue',
+    false
+  )
+
+}
+
+</script>
 
 <style lang="scss" scoped>
 
@@ -388,12 +239,16 @@ export default {
     transform .3s ease;
 }
 
-
 .fullscreen-fade-enter-from,
 .fullscreen-fade-leave-to {
   opacity: 0;
+  transform: translateY(100%);
+}
 
-  transform: translateY(30px);
+.fullscreen-fade-enter-to,
+.fullscreen-fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 </style>

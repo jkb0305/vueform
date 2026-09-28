@@ -1,6 +1,49 @@
+<!--ref="dialog"
+↓
+Vue에서 이 DOM을 $refs.dialog로 찾겠다.
+
+
+class="dialog"
+↓
+CSS 스타일을 적용하겠다.
+
+
+role="dialog"
+↓
+스크린 리더에게 "이건 Dialog입니다."
+
+
+aria-modal="true"
+↓
+현재 모달 상태라는 것을 알려준다.
+
+
+aria-labelledby="dialog-title"
+↓
+Dialog의 이름은 id="dialog-title"의 텍스트를 사용한다.
+
+
+tabindex="-1"
+↓
+Tab 순서에는 넣지 않지만 JavaScript로 focus할 수 있게 한다.
+
+
+@mousedown.stop
+↓
+이 영역에서 발생한 mousedown 이벤트를 부모에게 전달하지 않는다.-->
+
 <template>
   <transition name="dialog-fade">
+    <!--@mousedown.self="close"는 dialog를 제외한 영역을 클릭했을 때 팝업을 false시키는것--->
+    <!--watch: {
 
+  감시할데이터(newValue, oldValue) {
+
+    // 값이 변경되었을 때 실행
+
+  }
+
+}-->
     <div
       v-if="modelValue"
       class="dialog-wrap"
@@ -71,226 +114,56 @@
 </template>
 
 
-<script>
-export default {
+<script setup>
 
-  name: 'AppDialog',
+import { toRef } from 'vue'
 
-  props: {
+import { usePopup } from '@/assets/js/popup'
 
-    modelValue: {
-      type: Boolean,
-      default: false
-    },
 
-    title: {
-      type: String,
-      default: '타이틀입니다.'
-    },
+const props = defineProps({
 
-    description: {
-      type: String,
-      default: '내용입니다.'
-    }
-
+  modelValue: {
+    type: Boolean,
+    default: false
   },
 
-
-  emits: [
-    'update:modelValue',
-    'confirm'
-  ],
-
-
-  data() {
-
-    return {
-
-      lastFocusedElement: null
-
-    }
-
+  title: {
+    type: String,
+    default: ''
   },
 
-
-  watch: {
-
-    modelValue(value) {
-
-      if (value) {
-
-        this.openDialog()
-
-      } else {
-
-        this.removeEvents()
-
-      }
-
-    }
-
-  },
-
-
-  methods: {
-
-    openDialog() {
-
-      this.lastFocusedElement =
-        document.activeElement
-
-      document.body.classList.add(
-        'popup-open'
-      )
-
-
-      this.$nextTick(() => {
-
-        this.$refs.dialog?.focus()
-
-        document.addEventListener(
-          'keydown',
-          this.handleKeydown
-        )
-
-      })
-
-    },
-
-
-    close() {
-
-      this.$emit(
-        'update:modelValue',
-        false
-      )
-
-    },
-
-
-    confirm() {
-
-      this.$emit('confirm')
-
-      this.close()
-
-    },
-
-
-    removeEvents() {
-
-      document.body.classList.remove(
-        'popup-open'
-      )
-
-      document.removeEventListener(
-        'keydown',
-        this.handleKeydown
-      )
-
-
-      this.$nextTick(() => {
-
-        if (
-          this.lastFocusedElement &&
-          document.body.contains(
-            this.lastFocusedElement
-          )
-        ) {
-
-          this.lastFocusedElement.focus()
-
-        }
-
-      })
-
-    },
-
-
-    handleKeydown(event) {
-
-      // ESC
-      if (event.key === 'Escape') {
-
-        event.preventDefault()
-
-        this.close()
-
-        return
-
-      }
-
-
-      // TAB
-      if (event.key !== 'Tab') {
-        return
-      }
-
-
-      const dialog = this.$refs.dialog
-
-      if (!dialog) {
-        return
-      }
-
-
-      const focusableElements =
-        dialog.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        )
-
-
-      if (!focusableElements.length) {
-        return
-      }
-
-
-      const firstElement =
-        focusableElements[0]
-
-      const lastElement =
-        focusableElements[
-          focusableElements.length - 1
-        ]
-
-
-      // Shift + Tab
-      if (
-        event.shiftKey &&
-        document.activeElement === firstElement
-      ) {
-
-        event.preventDefault()
-
-        lastElement.focus()
-
-      }
-
-
-      // Tab
-      else if (
-        !event.shiftKey &&
-        document.activeElement === lastElement
-      ) {
-
-        event.preventDefault()
-
-        firstElement.focus()
-
-      }
-
-    }
-
-  },
-
-
-  beforeUnmount() {
-
-    this.removeEvents()
-
+  description: {
+    type: String,
+    default: ''
   }
 
+})
+
+
+const emit = defineEmits([
+  'update:modelValue'
+])
+
+
+const modelValue =
+  toRef(props, 'modelValue')
+
+
+const {
+  popupElement
+} = usePopup(modelValue)
+
+
+const close = () => {
+
+  emit(
+    'update:modelValue',
+    false
+  )
+
 }
+
 </script>
 
 
@@ -420,34 +293,34 @@ export default {
 
 .dialog-fade-enter-active,
 .dialog-fade-leave-active {
-  transition:
-    opacity .25s ease;
+  // transition:
+  //   opacity .25s ease;
 }
 
 
 .dialog-fade-enter-from,
 .dialog-fade-leave-to {
-  opacity: 0;
+  // opacity: 0;
 }
 
 
 .dialog-fade-enter-active .dialog,
 .dialog-fade-leave-active .dialog {
   transition:
-    opacity .25s ease,
+    // opacity .25s ease,
     transform .25s ease;
 }
 
 
 .dialog-fade-enter-from .dialog {
-  opacity: 0;
-  transform: scale(.94) translateY(10px);
+  // opacity: 0; scale(.94)(scale은 transform)
+  transform: translateY(30px);
 }
 
 
 .dialog-fade-leave-to .dialog {
-  opacity: 0;
-  transform: scale(.94) translateY(10px);
+  // opacity: 0;
+  transform: scale(.94) translateY(0px);
 }
 
 </style>

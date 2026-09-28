@@ -12,3 +12,62 @@ body {
         color:red;
     }
 }
+
+
+// ========================================
+// Popup 공통
+// ========================================
+
+body {
+
+  // 팝업이 열렸을 때
+  &.popup-open {
+
+    // 뒤 페이지 스크롤 방지
+    overflow: hidden;
+
+  }
+
+
+  // ======================================
+  // 팝업 배경
+  // ======================================
+
+  &::before {
+
+    content: '';
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 999;
+
+    background: rgba(0, 0, 0, 0.4);
+
+    // 처음에는 안 보임
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s ease;
+
+  }
+
+
+  // 팝업이 열렸을 때
+  &.popup-open::before {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+
+  }
+
+}
