@@ -1,365 +1,188 @@
 <template>
-  <div class="product-wrap">
 
-    <h2>이 장소와 비슷한 맛집</h2>
+  <div class="swiper-guide">
 
-
-    <!-- Swiper -->
-    <Swiper
-      :modules="[Grid]"
-      :slides-per-view="2"
-      :slides-per-group="2"
-      :grid="{
-        rows: 2,
-        fill: 'row'
-      }"
-      :space-between="12"
-      @swiper="onSwiper"
-      @slide-change="onSlideChange"
-    >
-
-      <SwiperSlide
-        v-for="(item, index) in products"
-        :key="index"
-      >
-
-        <div class="product">
-
-          <img
-            :src="item.image"
-            :alt="item.name"
-          >
-
-          <p>
-            {{ item.name }}
-          </p>
-
-        </div>
-
-      </SwiperSlide>
-
-    </Swiper>
+    <h1>Swiper Guide</h1>
 
 
-    <!-- 하단 컨트롤 -->
-    <div class="swiper-control">
+    <!-- 기본 -->
+    <section class="guide-section">
 
-      <!-- 이전 -->
-      <button
-        type="button"
-        @click="prevSlide"
-      >
-        ←
-      </button>
+      <h2>01. Basic</h2>
 
+      <p>
+        가장 기본적인 Swiper입니다.
+      </p>
 
-      <!-- 페이지 -->
-      <span>
-        {{ currentPage }} / {{ totalPage }}
-      </span>
+      <BasicSwiper />
+
+    </section>
 
 
-      <!-- 다음 -->
-      <button
-        type="button"
-        @click="nextSlide"
-      >
-        →
-      </button>
+    <!-- Navigation -->
+    <section class="guide-section">
 
-    </div>
+      <h2>02. Navigation</h2>
+
+      <p>
+        이전 / 다음 버튼을 사용하는 Swiper입니다.
+      </p>
+
+      <NavigationSwiper />
+
+    </section>
+
+
+    <!-- Pagination -->
+    <section class="guide-section">
+
+      <h2>03. Pagination</h2>
+
+      <p>
+        하단 페이지네이션을 사용하는 Swiper입니다.
+      </p>
+
+      <PaginationSwiper />
+
+    </section>
+
+
+    <!-- 여러 장 -->
+    <section class="guide-section">
+
+      <h2>04. Multiple Slides</h2>
+
+      <p>
+        한 화면에 여러 개의 슬라이드를 보여줍니다.
+      </p>
+
+      <MultipleSwiper />
+
+    </section>
+
+
+    <!-- Grid -->
+    <section class="guide-section">
+
+      <h2>05. Grid</h2>
+
+      <p>
+        2열 × 2행 Grid 형태의 Swiper입니다.
+      </p>
+
+      <GridSwiper />
+
+    </section>
+
+
+    <!-- Autoplay -->
+    <section class="guide-section">
+
+      <h2>06. Autoplay</h2>
+
+      <p>
+        일정 시간마다 자동으로 슬라이드가 이동합니다.
+      </p>
+
+      <AutoplaySwiper />
+
+    </section>
+
+
+    <!-- Custom Control -->
+    <section class="guide-section">
+
+      <h2>07. Custom Control</h2>
+
+      <p>
+        Swiper API를 이용하여 직접 컨트롤 버튼을 만든 형태입니다.
+      </p>
+
+      <CustomControlSwiper />
+
+    </section>
 
   </div>
+
 </template>
 
 
 <script setup>
 
-import { ref } from 'vue'
+import BasicSwiper
+  from '@/assets/guide-components/swiper-components/basic-swiper.vue'
 
-import {
-  Swiper,
-  SwiperSlide
-} from 'swiper/vue'
+import NavigationSwiper
+  from '@/assets/guide-components/swiper-components/navigation-swiper.vue'
 
-import {
-  Grid
-} from 'swiper/modules'
+import PaginationSwiper
+  from '@/assets/guide-components/swiper-components/pagination-swiper.vue'
 
-import 'swiper/css'
-import 'swiper/css/grid'
+import MultipleSwiper
+  from '@/assets/guide-components/swiper-components/multiple-swiper.vue'
 
+import GridSwiper
+  from '@/assets/guide-components/swiper-components/grid-swiper.vue'
 
-/*
-  상품 데이터
-*/
+import AutoplaySwiper
+  from '@/assets/guide-components/swiper-components/autoplay-swiper.vue'
 
-const products = [
-
-  {
-    name: '상품 1',
-    image: 'https://picsum.photos/300/200?1'
-  },
-
-  {
-    name: '상품 2',
-    image: 'https://picsum.photos/300/200?2'
-  },
-
-  {
-    name: '상품 3',
-    image: 'https://picsum.photos/300/200?3'
-  },
-
-  {
-    name: '상품 4',
-    image: 'https://picsum.photos/300/200?4'
-  },
-
-  {
-    name: '상품 5',
-    image: 'https://picsum.photos/300/200?5'
-  },
-
-  {
-    name: '상품 6',
-    image: 'https://picsum.photos/300/200?6'
-  },
-
-  {
-    name: '상품 7',
-    image: 'https://picsum.photos/300/200?7'
-  },
-
-  {
-    name: '상품 8',
-    image: 'https://picsum.photos/300/200?8'
-  }
-
-]
-
-
-/*
-  Swiper 객체
-*/
-
-const swiper = ref(null)
-
-
-/*
-  현재 페이지
-*/
-
-const currentPage = ref(1)
-
-
-/*
-  전체 페이지
-
-  상품 8개
-  한 페이지 4개
-
-  = 2페이지
-*/
-
-const totalPage = Math.ceil(
-  products.length / 4
-)
-
-
-/*
-  Swiper 생성
-*/
-
-const onSwiper = (instance) => {
-
-  swiper.value = instance
-
-}
-
-
-/*
-  슬라이드 변경
-*/
-
-const onSlideChange = (instance) => {
-
-  currentPage.value =
-    Math.floor(
-      instance.activeIndex / 2
-    ) + 1
-
-}
-
-
-/*
-  이전 버튼
-*/
-
-const prevSlide = () => {
-
-  swiper.value.slidePrev()
-
-}
-
-
-/*
-  다음 버튼
-*/
-
-const nextSlide = () => {
-
-  swiper.value.slideNext()
-
-}
+import CustomControlSwiper
+  from '@/assets/guide-components/swiper-components/custom-control-swiper.vue'
 
 </script>
 
 
 <style scoped lang="scss">
 
-/* --------------------------------
-   전체
--------------------------------- */
+.swiper-guide {
 
-.product-wrap {
   width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-}
 
-
-/* --------------------------------
-   제목
--------------------------------- */
-
-.product-wrap h2 {
-  margin: 0 0 20px;
-
-  font-size: 20px;
-  line-height: 1.4;
-}
-
-
-/* --------------------------------
-   Swiper
--------------------------------- */
-
-.swiper {
-  width: 100%;
-  height: 280px;
-}
-
-
-/*
-  중요!
-
-  height: auto 를 넣지 않습니다.
-  Swiper Grid가 자동으로 높이를 계산합니다.
-*/
-
-
-/* --------------------------------
-   상품
--------------------------------- */
-
-.product {
-  width: 100%;
-  height: 130px;
-
-  overflow: hidden;
-
-  border-radius: 10px;
-
-  background: #fff;
+  padding: 30px 20px 60px;
 
   box-sizing: border-box;
-}
 
 
-/* --------------------------------
-   상품 이미지
--------------------------------- */
+  > h1 {
 
-.product img {
-  display: block;
+    margin: 0 0 40px;
 
-  width: 100%;
-  height: 90px;
+    font-size: 28px;
 
-  object-fit: cover;
-}
+  }
 
 
-/* --------------------------------
-   상품 이름
--------------------------------- */
+  .guide-section {
 
-.product p {
-  margin: 8px 10px 0;
+    margin-bottom: 60px;
 
-  font-size: 14px;
-  line-height: 18px;
+    padding-bottom: 40px;
 
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-}
+    border-bottom: 1px solid #ddd;
 
 
-/* --------------------------------
-   하단 컨트롤
--------------------------------- */
+    h2 {
 
-.swiper-control {
-  display: flex;
+      margin: 0 0 8px;
 
-  align-items: center;
-  justify-content: center;
+      font-size: 20px;
 
-  gap: 20px;
-
-  margin-top: 16px;
-}
+    }
 
 
-/* --------------------------------
-   좌우 버튼
--------------------------------- */
+    p {
 
-.swiper-control button {
-  display: flex;
+      margin: 0 0 20px;
 
-  align-items: center;
-  justify-content: center;
+      color: #666;
 
-  width: 32px;
-  height: 32px;
+      font-size: 14px;
 
-  padding: 0;
+    }
 
-  border: 0;
+  }
 
-  background: transparent;
-
-  font-size: 20px;
-
-  cursor: pointer;
-}
-
-
-/* --------------------------------
-   페이지
--------------------------------- */
-
-.swiper-control span {
-  min-width: 50px;
-
-  font-size: 14px;
-
-  text-align: center;
 }
 
 </style>
