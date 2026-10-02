@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../components/HomeView.vue'
+import scroll from '../guide/scroll.vue'
 import AboutView from '../components/AboutView.vue'
 import filelist from '../guide/mockup.vue'
 import guide from '../guide/guide.vue'
@@ -17,9 +17,9 @@ const routes = [
         component: guide
     },
     {
-        path: '/home',
-        name: 'home',
-        component: HomeView
+        path: '/scroll',
+        name: 'scroll',
+        component: scroll
     },
     {
         path: '/about',

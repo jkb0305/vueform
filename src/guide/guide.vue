@@ -23,6 +23,8 @@ import GuideTab from '../assets/guide-components/guide-tab.vue'
 import GuideForm from '../assets/guide-components/guide-form.vue'
 import GuideSwiper from '../assets/guide-components/guide-swiper.vue'
 import GuidePopup from '../assets/guide-components/guide-popup.vue'
+import GuideAni from '../assets/guide-components/guide-animation.vue'
+import GuideScroll from '../assets/guide-components/guide-scroll.vue'
 export default {
     data(){
         return{
@@ -32,7 +34,9 @@ export default {
                 { id: 'GuideTab', name: 'tab' },
                 { id: 'GuideForm', name: 'form' },
                 { id: 'GuideSwiper', name: 'swiper' },
-                { id: 'GuidePopup', name: 'popup' }
+                { id: 'GuidePopup', name: 'popup' },
+                { id: 'GuideAni', name: 'animation' },
+                { id: 'GuideScroll', name: 'scroll' }
             ]
         }
     },
@@ -46,7 +50,9 @@ export default {
         GuideTab,
         GuideForm,
         GuideSwiper,
-        GuidePopup
+        GuidePopup,
+        GuideAni,
+        GuideScroll
     },
 }
 </script>
