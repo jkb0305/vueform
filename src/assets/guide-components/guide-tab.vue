@@ -69,7 +69,7 @@
           4번 이에요
         </div>
       </div>
-      <button @scroll="scrollTop" class="top-btn" type="button"></button>
+      <button :class="scrollY?'active':null" @click="scrollTop" class="top-btn" type="button"></button>
     </div>
   </div>
 </template>
@@ -93,7 +93,7 @@ export default {
       isTabFixed: false,
       lastScrollY: 0,
       tabWrapperTop: 0,
-      scrollY:0,
+      scrollY:false,
     }
   },
 
@@ -120,7 +120,7 @@ export default {
 
   window.addEventListener(
     'scroll',
-    this.handleScroll
+    this.handleScroll,
   )
 
 },
@@ -136,7 +136,7 @@ export default {
 
   window.removeEventListener(
     'scroll',
-    this.handleScroll
+    this.handleScroll,
   )
 
 },
@@ -168,13 +168,9 @@ export default {
 
     },
     scrollTop(){
-      const topBtn = document.querySelector('.top-btn');
-      window.addEventListener('scroll', ()=>{
-        if(this.scrollY > 60){
-          topBtn.classList.add('active');
-        }else{
-          topBtn.classList.remove('active');
-        }
+      window.scrollTo({
+        top:0,
+        behavior:'smooth',
       })
     },
     setTabWrapperTop() {
@@ -253,7 +249,7 @@ export default {
   const currentScrollY =
     window.scrollY
 
-
+  this.scrollY = currentScrollY > 60
   /*
    * 아래로 스크롤 중인지 확인
    */
