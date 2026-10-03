@@ -1,14 +1,20 @@
 <template>
+    <!--버튼을 클릭했을 떄 indicator는 li의 넓이 : li.outerwidth
+        클릭했을떄 index 만큼의 넓이 이동 position.left?
+        offsetWidth
+        offsetLeft
+    -->
   <div>
-    <commonHeader title="제목이에요" btn="true"></commonHeader>
+    <commonHeader title="제목이에요" :btn="true"></commonHeader>
     <div class="content">
         <div class="tab-wrapper">
             <div class="tab">
                 <ul role="tab">
-                    <li v-bind:class="isTabContentVisible === index ? 'active':null" v-for="(tab, index) in tabs" :key="index" class="">
+                    <li ref="tabItems" v-bind:class="isTabContentVisible === index ? 'active':null" v-for="(tab, index) in tabs" :key="index" class="">
                         <button @click="isTabVisible(index)" class="link-btn" type="button">{{ tab }}</button>
                     </li>
                 </ul>
+                <span ref="indicator" class="indicator"></span>
             </div>
             <div class="tab-content">
                 <div v-show="isTabContentVisible == 0" class="content">1번 내용</div>
@@ -39,6 +45,9 @@ export default {
             scroll:false,
             tabs:['1번탭','2번탭','3번탭', '4번탭', '5번탭'],
             isTabContentVisible:0,
+            liWidth:0,
+            liPosition:0,
+            liHeight:0,
         }
     },
     components:{
@@ -63,18 +72,44 @@ export default {
         },
         isTabVisible(index){
             this.isTabContentVisible = index;
+            this.$nextTick(() => {
+                this.moveIndicator();
+            });
+        },
+        moveIndicator(){
+            const tabItems = this.$refs.tabItems;
+            const indicator = this.$refs.indicator;
+            if (!tabItems || !indicator) {
+                return;
+            }
+            const currentTab =
+                tabItems[this.isTabContentVisible];
+            if (!currentTab) {
+                return;
+            }
+            this.liWidth =
+                currentTab.offsetWidth;
+            this.liPosition =
+                currentTab.offsetLeft;
+            this.liHeight = 
+                currentTab.offsetHeight;
+            indicator.style.width =
+                `${this.liWidth}px`;
+            indicator.style.transform =
+                `translateX(${this.liPosition}px)`;
+            indicator.style.height =
+                `${this.liHeight}px`;
         }
 
     },
     mounted(){
-        window.addEventListener('scroll',()=>{
-            this.scrollTop()
-        })
+       window.addEventListener('scroll',this.scrollTop)
+        this.$nextTick(() => {
+            this.moveIndicator();
+        });
     },
     beforeUnmount(){
-        window.removeEventListener('scroll',()=>{
-            this.scrollTop()
-        })
+        window.removeEventListener('scroll', this.scrollTop)
     }
 
 }
@@ -105,21 +140,35 @@ export default {
   }
   .tab-wrapper{
     .tab{
+        position:relative;
         ul{
             display:flex;
             li{
+                position:relative;
+                z-index:2;
                 button{
                     padding:0 8px;
                     color:#ccc;
                     font-weight:400;
+                    z-index:10;
+                    
                 }
                 &.active{
                     button{
-                        color:#000;
                         font-weight:700;
+                        color:#000;
+                        z-index:10;
                     }
                 }
             }
+        }
+        .indicator{
+            position:absolute;
+            bottom:0;
+            left:0;
+            z-index:1;
+            background-color:#ebebeb;
+            transition:transform 0.3s;
         }
     }
     .tab-content{

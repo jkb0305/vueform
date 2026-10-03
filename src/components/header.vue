@@ -2,7 +2,7 @@
   <header v-bind:class="{fixed:fixedTop}">
         <button type="button" class="back-btn"></button>
         <h1 class="header-title">{{title}}</h1>
-        <button type="button" class="setting-btn"></button>
+        <button v-if="btn" type="button" class="setting-btn"></button>
     </header>
 </template>
 
@@ -23,14 +23,10 @@ export default {
         }
     },
     mounted(){
-        window.addEventListener('scroll', () => {
-            this.onScroll();
-        })
+        window.addEventListener('scroll',this.onScroll)
     },
-    beforeMount(){
-        window.removeEventListener('scroll', () => {
-            this.onScroll();
-        })
+    beforeUnmount(){
+        window.removeEventListener('scroll',this.onScroll)
     },
   props:{
     title: {
